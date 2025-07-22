@@ -4,12 +4,13 @@ import {
   githubProvider,
   facebookProvider,
   appleProvider,
-  signInWithPopup
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
 } from './firebaseConfig.js';
 
-// Fonction pour gérer la connexion avec un fournisseur
-// Cette fonction prend un fournisseur d'authentification et gère la connexion
-// en utilisant Firebase Authentication.
+// --- Connexion avec fournisseurs (Google, Facebook, etc.)
 function handleLogin(provider) {
   signInWithPopup(auth, provider)
     .then((result) => {
@@ -19,85 +20,98 @@ function handleLogin(provider) {
     })
     .catch((error) => {
       console.error("Erreur d'authentification :", error);
-      alert(`Erreur: ${error.message}`);
+      alert(`Erreur : ${error.message}`);
     });
 }
 
-// Événements pour les boutons de connexion (sign-in)
-const googleSignin = document.getElementById("google-signin");
-const facebookSignin = document.getElementById("facebook-signin");
-const githubSignin = document.getElementById("github-signin");
-const appleSignin = document.getElementById("apple-signin");
-
-// Événements pour les boutons d'inscription (sign-up)
-const googleSignup = document.getElementById("google-signup");
-const facebookSignup = document.getElementById("facebook-signup");
-const githubSignup = document.getElementById("github-signup");
-
-// Gestion des événements pour sign-in
-if (googleSignin) {
-  googleSignin.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleLogin(googleProvider);
-  });
+// --- Inscription avec email/mot de passe
+function registerWithEmail(email, password) {
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      alert(`Inscription réussie : ${user.email}`);
+    })
+    .catch((error) => {
+      alert(`Erreur lors de l'inscription : ${error.message}`);
+    });
 }
 
-if (facebookSignin) {
-  facebookSignin.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleLogin(facebookProvider);
-  });
+// --- Connexion avec email/mot de passe
+function loginWithEmail(email, password) {
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      alert(`Connecté : ${user.email}`);
+    })
+    .catch((error) => {
+      alert(`Erreur de connexion : ${error.message}`);
+    });
 }
 
-if (githubSignin) {
-  githubSignin.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleLogin(githubProvider);
-  });
-}
+// --- Gestion des événements pour providers sociaux (sign-in)
+document.getElementById("google-signin")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  handleLogin(googleProvider);
+});
 
-if (appleSignin) {
-  appleSignin.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleLogin(appleProvider);
-  });
-}
+document.getElementById("facebook-signin")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  handleLogin(facebookProvider);
+});
 
-// Gestion des événements pour sign-up
-if (googleSignup) {
-  googleSignup.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleLogin(googleProvider);
-  });
-}
+document.getElementById("github-signin")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  handleLogin(githubProvider);
+});
 
-if (facebookSignup) {
-  facebookSignup.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleLogin(facebookProvider);
-  });
-}
+document.getElementById("apple-signin")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  handleLogin(appleProvider);
+});
 
-if (githubSignup) {
-  githubSignup.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleLogin(githubProvider);
-  });
-}
+// --- Gestion des événements pour providers sociaux (sign-up)
+document.getElementById("google-signup")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  handleLogin(googleProvider);
+});
 
-// Gestion de l'animation des panneaux
+document.getElementById("facebook-signup")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  handleLogin(facebookProvider);
+});
+
+document.getElementById("github-signup")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  handleLogin(githubProvider);
+});
+
+// --- Gestion des formulaires email/password
+const signupForm = document.querySelector(".sign-up form");
+const signinForm = document.querySelector(".sign-in form");
+
+signupForm?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = document.getElementById("signup-email").value;
+  const password = document.getElementById("signup-password").value;
+  registerWithEmail(email, password);
+});
+
+signinForm?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = document.getElementById("signin-email").value;
+  const password = document.getElementById("signin-password").value;
+  loginWithEmail(email, password);
+});
+
+// --- Animation du panneau (slide sign-in / sign-up)
 const container = document.getElementById('container');
 const registerBtn = document.getElementById('register');
 const loginBtn = document.getElementById('login');
 
-if (registerBtn) {
-  registerBtn.addEventListener('click', () => {
-    container.classList.add("active");
-  });
-}
+registerBtn?.addEventListener('click', () => {
+  container.classList.add("active");
+});
 
-if (loginBtn) {
-  loginBtn.addEventListener('click', () => {
-    container.classList.remove("active");
-  });
-}
+loginBtn?.addEventListener('click', () => {
+  container.classList.remove("active");
+});
