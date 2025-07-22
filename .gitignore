@@ -1,3 +1,6 @@
+# Firebase Hosting & config
+.firebase/
+
 # macOS
 .DS_Store
 
@@ -15,7 +18,11 @@ yarn-error.log*
 .env
 .env.*
 firebaseConfig.local.js
+Assets/Js/firebaseConfig.js
+
 firebaseConfig.js
+Assets/Js/firebaseConfig.example.js
+firebaseConfig.example.js
 
 # Dossiers de build éventuels
 dist/
