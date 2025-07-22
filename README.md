@@ -34,11 +34,14 @@ Une page de connexion/inscription moderne, responsive et animée, avec authentif
 ```
 ├── index.html
 ├── mdp-forgot.html
-├── style.css
-├── script.js
-├── firebaseConfig.js
 ├── README.md
-└── ...
+├── Assets/
+│   ├── Css/
+│   │   └── style.css
+│   └── Js/
+│       ├── firebase.js
+│       ├── firebaseConfig.js
+│       └── script.js
 ```
 
 ## Contrôles & Utilisation
