@@ -29,6 +29,7 @@ body{
     width: 768px;
     max-width: 100%;
     min-height: 480px;
+    margin: 20px;
 }
 
 /* Style des paragraphes dans le conteneur */
@@ -137,6 +138,7 @@ body{
     width: 100%;
     justify-content: center;
     align-items: center;
+    padding: 40px !important;
 }
 
 /* Style pour le sous-titre */
@@ -262,4 +264,246 @@ body{
 /* Animation du panneau droit lors de l'activation */
 .container.active .toggle-right{
     transform: translateX(200%);
+}
+
+/* Bouton de basculement mobile (caché par défaut) */
+.mobile-toggle {
+    display: none;
+    text-align: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.mobile-toggle button {
+    background: linear-gradient(to right, #5c6bc0, #512da8);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mobile-toggle button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(81, 45, 168, 0.3);
+}
+
+/* ========== MEDIA QUERIES POUR RESPONSIVE ========== */
+
+/* Tablettes et écrans moyens */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        max-width: 500px;
+        min-height: 600px;
+        border-radius: 20px;
+        margin: 10px;
+    }
+
+    /* Affiche le bouton de basculement mobile */
+    .mobile-toggle {
+        display: block;
+    }
+
+    /* Mode mobile : stack vertical au lieu de horizontal */
+    .form-container {
+        width: 100% !important;
+        position: relative;
+    }
+
+    .sign-in, .sign-up {
+        width: 100% !important;
+        left: 0 !important;
+        transform: none !important;
+        position: relative;
+    }
+
+    /* Par défaut, affiche sign-in et cache sign-up */
+    .sign-up {
+        display: none;
+    }
+
+    .sign-in {
+        display: block;
+    }
+
+    /* Quand actif, affiche sign-up et cache sign-in */
+    .container.active .sign-up {
+        display: block;
+        opacity: 1;
+        transform: none !important;
+    }
+
+    .container.active .sign-in {
+        display: none;
+        transform: none !important;
+    }
+
+    /* Cache le panneau de bascule sur mobile */
+    .toggle-container {
+        display: none;
+    }
+
+    /* Ajuste les formulaires pour mobile */
+    .container form {
+        padding: 20px 30px;
+    }
+
+    .container button {
+        padding: 12px 40px;
+        font-size: 14px;
+    }
+
+    .container input {
+        padding: 12px 15px;
+        font-size: 14px;
+        margin: 10px 0;
+    }
+
+    .social-icons a {
+        width: 45px;
+        height: 45px;
+        margin: 0 5px;
+    }
+
+    /* Styles spéciaux pour la page de mot de passe oublié */
+    .forgot-password {
+        padding: 30px !important;
+    }
+
+    .forgot-password h1 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+}
+
+/* Écrans moyens vers petits */
+@media (max-width: 600px) {
+    body {
+        padding: 0 10px;
+    }
+
+    .container {
+        width: 100%;
+        margin: 10px 0;
+        border-radius: 15px;
+    }
+}
+
+/* Smartphones */
+@media (max-width: 480px) {
+    body {
+        padding: 0 15px;
+        min-height: 100vh;
+    }
+
+    .container {
+        width: 100%;
+        max-width: none;
+        min-height: 500px;
+        border-radius: 15px;
+        margin: 10px 0;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .container form {
+        padding: 15px 20px;
+    }
+
+    .container h1 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .container p {
+        font-size: 13px;
+        line-height: 18px;
+        margin: 15px 0;
+    }
+
+    .container span {
+        font-size: 11px;
+    }
+
+    .container input {
+        padding: 10px 12px;
+        font-size: 13px;
+        margin: 8px 0;
+    }
+
+    .container button {
+        padding: 10px 30px;
+        font-size: 12px;
+    }
+
+    .social-icons {
+        margin: 15px 0;
+    }
+
+    .social-icons a {
+        width: 40px;
+        height: 40px;
+        margin: 0 3px;
+    }
+
+    .subtitle {
+        font-size: 13px !important;
+        margin: 10px 0 20px 0 !important;
+    }
+}
+
+/* Très petits écrans */
+@media (max-width: 320px) {
+    body {
+        padding: 0 10px;
+    }
+
+    .container {
+        width: 100%;
+        margin: 5px 0;
+        border-radius: 10px;
+    }
+
+    .container form {
+        padding: 10px 15px;
+    }
+
+    .container h1 {
+        font-size: 20px;
+    }
+
+    .container input {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .container button {
+        padding: 8px 25px;
+        font-size: 11px;
+    }
+
+    .social-icons a {
+        width: 35px;
+        height: 35px;
+        margin: 0 2px;
+    }
+}
+
+/* Écrans larges */
+@media (min-width: 1200px) {
+    .container {
+        width: 850px;
+        min-height: 520px;
+    }
+    
+    .container form {
+        padding: 0 50px;
+    }
+    
+    .toggle-panel {
+        padding: 0 40px;
+    }
 }
