@@ -74,8 +74,19 @@ if (!document.querySelector('#notification-styles')) {
   document.head.appendChild(style);
 }
 
+// Variable pour empêcher les requêtes multiples
+let isAuthInProgress = false;
+
 // --- Connexion avec fournisseurs (Google, Facebook, etc.)
 function handleLogin(provider) {
+  // Empêcher les requêtes multiples
+  if (isAuthInProgress) {
+    showMessage("Authentification en cours... Veuillez patienter.", true);
+    return;
+  }
+  
+  isAuthInProgress = true;
+  
   signInWithPopup(auth, provider)
     .then((result) => {
       const user = result.user;
@@ -93,20 +104,49 @@ function handleLogin(provider) {
       
       // Messages d'erreur plus spécifiques
       switch (error.code) {
+        case 'auth/cancelled-popup-request':
+          errorMessage = "Requête popup annulée. Une autre connexion est en cours.";
+          break;
         case 'auth/popup-closed-by-user':
           errorMessage = "Connexion annulée par l'utilisateur";
           break;
         case 'auth/popup-blocked':
-          errorMessage = "Popup bloquée par le navigateur";
+          errorMessage = "Popup bloquée par le navigateur. Autorisez les popups pour ce site.";
           break;
         case 'auth/account-exists-with-different-credential':
           errorMessage = "Un compte existe déjà avec cette adresse email";
           break;
+        case 'auth/invalid-credential-or-provider-id':
+          // Erreur spécifique Facebook
+          if (error.message && error.message.includes('Facebook')) {
+            errorMessage = "🔧 Facebook Login temporairement indisponible. Facebook effectue une mise à jour de votre application. Utilisez Google ou l'email en attendant.";
+          } else {
+            errorMessage = "Identifiants ou fournisseur invalide";
+          }
+          break;
+        case 'auth/operation-not-allowed':
+          errorMessage = "Cette méthode de connexion n'est pas activée dans Firebase";
+          break;
+        case 'auth/configuration-not-found':
+          errorMessage = "Configuration du fournisseur non trouvée";
+          break;
+        case 'auth/network-request-failed':
+          errorMessage = "Erreur réseau. Vérifiez votre connexion internet.";
+          break;
         default:
-          errorMessage = error.message;
+          // Gestion spéciale pour les erreurs Facebook
+          if (error.message && (error.message.includes('Facebook') || error.message.includes('Fonctionnalité indisponible'))) {
+            errorMessage = "🔧 Facebook Login indisponible. Facebook met à jour votre application. Utilisez une autre méthode de connexion.";
+          } else {
+            errorMessage = error.message;
+          }
       }
       
       showMessage(errorMessage, true);
+    })
+    .finally(() => {
+      // Toujours remettre le flag à false après la tentative
+      isAuthInProgress = false;
     });
 }
 
@@ -198,6 +238,17 @@ document.getElementById("google-signin")?.addEventListener("click", (e) => {
 
 document.getElementById("facebook-signin")?.addEventListener("click", (e) => {
   e.preventDefault();
+  
+  // Empêcher les clics multiples
+  if (isAuthInProgress) {
+    showMessage("Authentification en cours... Veuillez patienter.", true);
+    return;
+  }
+  
+  // Vérifier si Facebook est fonctionnel
+  showMessage("🔄 Tentative de connexion Facebook...", false);
+  
+  // Essayer la connexion Facebook avec gestion d'erreur améliorée
   handleLogin(facebookProvider);
 });
 
@@ -219,7 +270,18 @@ document.getElementById("google-signup")?.addEventListener("click", (e) => {
 
 document.getElementById("facebook-signup")?.addEventListener("click", (e) => {
   e.preventDefault();
-  handleLogin(facebookProvider);
+  
+  // Empêcher les clics multiples
+  if (isAuthInProgress) {
+    showMessage("Authentification en cours... Veuillez patienter.", true);
+    return;
+  }
+  
+  // Avertissement temporaire pour Facebook
+  showMessage("⚠️ Facebook Login temporairement indisponible. Facebook effectue une mise à jour de l'application. Utilisez Google ou l'email.", true);
+  
+  // Optionnel : essayer quand même la connexion Facebook
+  // handleLogin(facebookProvider);
 });
 
 document.getElementById("github-signup")?.addEventListener("click", (e) => {
