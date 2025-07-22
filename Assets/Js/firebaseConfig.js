@@ -6,13 +6,13 @@ import { getAuth, GoogleAuthProvider, GithubAuthProvider, FacebookAuthProvider, 
 // Your web app's Firebase configuration
 // Note: Ces clés sont publiques et doivent être configurées avec des règles de sécurité appropriées
 const firebaseConfig = {
-    apiKey: "AIzaSyA6kE6xM2C0WMFz6j_7OcncBP9j_8ZtC84",
-    authDomain: "ai-app-ad067.firebaseapp.com",
-    projectId: "ai-app-ad067",
-    storageBucket: "ai-app-ad067.appspot.com",
-    messagingSenderId: "413928668174",
-    appId: "1:413928668174:web:f1de5bce163b9a7fc4d05f",
-    measurementId: "G-ES2NE8G15M"
+  apiKey: "AIzaSyCBeG_bj6uCL3odyKfE4UdLPeNecwo7owo",
+  authDomain: "page-d-authentification.firebaseapp.com",
+  projectId: "page-d-authentification",
+  storageBucket: "page-d-authentification.firebasestorage.app",
+  messagingSenderId: "265904225207",
+  appId: "1:265904225207:web:ce322d2898caffb788c632",
+  measurementId: "G-TX8Z0ZCWST"
 };
 
 // Initialize Firebase

@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Node (si jamais utilisé pour build ou test)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers d'environnement (jamais versionner vos secrets)
+.env
+.env.*
+firebaseConfig.local.js
+firebaseConfig.js
+
+# Dossiers de build éventuels
+dist/
+build/
+
+# Autres fichiers temporaires
+*.swp
+*.swo
+*.tmp
+*~
