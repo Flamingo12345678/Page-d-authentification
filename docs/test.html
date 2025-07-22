@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Firebase - GitHub Pages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        .warning { background-color: #fff3cd; color: #856404; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #0056b3; }
+        .github-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .code {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔥 Test Firebase sur GitHub Pages</h1>
+        
+        <div class="github-info">
+            <h3>🚀 Configuration GitHub Pages</h3>
+            <p><strong>URL actuelle :</strong> <span class="code" id="current-url"></span></p>
+            <p><strong>Environnement :</strong> <span id="environment"></span></p>
+        </div>
+        
+        <div id="status"></div>
+        
+        <h3>Tests automatiques :</h3>
+        <div id="auto-tests"></div>
+        
+        <h3>Tests manuels :</h3>
+        <button onclick="testFirebaseConnection()">🔗 Test Connexion Firebase</button>
+        <button onclick="testAuthService()">🔐 Test Service Auth</button>
+        <button onclick="testGoogleAuth()">🔍 Test Google Auth</button>
+        <button onclick="testEmailAuth()">📧 Test Email Auth</button>
+        
+        <div id="user-info" style="margin-top: 20px;"></div>
+        
+        <div class="test-container">
+            <h3>📋 Instructions de configuration</h3>
+            <ol>
+                <li><strong>Firebase Console :</strong> Ajoutez votre domaine GitHub Pages dans "Authorized domains"</li>
+                <li><strong>Domaine à ajouter :</strong> <span class="code" id="github-domain"></span></li>
+                <li><strong>Providers :</strong> Configurez Google, GitHub, Email/Password dans Authentication</li>
+                <li><strong>OAuth :</strong> Mettez à jour les URLs de callback pour chaque provider</li>
+            </ol>
+        </div>
+    </div>
+
+    <script type="module">
+        import { 
+            auth, 
+            googleProvider,
+            githubProvider,
+            signInWithPopup,
+            signInWithRedirect,
+            getRedirectResult,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            isGitHubPages
+        } from './firebaseConfig.js';
+
+        let currentUser = null;
+
+        // Afficher les informations sur l'environnement
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('github-domain').textContent = window.location.hostname;
+        
+        if (isGitHubPages()) {
+            document.getElementById('environment').innerHTML = '<span style="color: #28a745;">✅ GitHub Pages</span>';
+        } else {
+            document.getElementById('environment').innerHTML = '<span style="color: #007bff;">🏠 Local</span>';
+        }
+
+        // Surveiller l'état d'authentification
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            updateUserInfo(user);
+        });
+
+        // Gérer les résultats de redirection
+        getRedirectResult(auth)
+            .then((result) => {
+                if (result) {
+                    addStatus('✅ Connexion par redirection réussie!', 'success');
+                }
+            })
+            .catch((error) => {
+                addStatus(`❌ Erreur de redirection: ${error.message}`, 'error');
+            });
+
+        function updateUserInfo(user) {
+            const userInfoDiv = document.getElementById('user-info');
+            if (user) {
+                userInfoDiv.innerHTML = `
+                    <div class="status success">
+                        <h4>✅ Utilisateur connecté :</h4>
+                        <p><strong>Email :</strong> ${user.email}</p>
+                        <p><strong>Nom :</strong> ${user.displayName || 'Non défini'}</p>
+                        <p><strong>Provider :</strong> ${user.providerData[0]?.providerId || 'Inconnu'}</p>
+                        <button onclick="logout()">Se déconnecter</button>
+                    </div>
+                `;
+            } else {
+                userInfoDiv.innerHTML = `
+                    <div class="status info">
+                        <p>Aucun utilisateur connecté</p>
+                    </div>
+                `;
+            }
+        }
+
+        function addStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            const statusEl = document.createElement('div');
+            statusEl.className = `status ${type}`;
+            statusEl.innerHTML = message;
+            statusDiv.appendChild(statusEl);
+            
+            // Garder seulement les 10 derniers messages
+            const statusElements = statusDiv.querySelectorAll('.status');
+            if (statusElements.length > 10) {
+                statusElements[0].remove();
+            }
+        }
+
+        function addAutoTest(message, type = 'info') {
+            const autoTestsDiv = document.getElementById('auto-tests');
+            const testEl = document.createElement('div');
+            testEl.className = `status ${type}`;
+            testEl.innerHTML = message;
+            autoTestsDiv.appendChild(testEl);
+        }
+
+        // Tests automatiques au chargement
+        function runAutoTests() {
+            addAutoTest('🚀 Démarrage des tests automatiques...', 'info');
+            
+            // Test 1: Firebase initialisé
+            try {
+                if (auth && auth.app) {
+                    addAutoTest('✅ Firebase initialisé correctement', 'success');
+                    addAutoTest(`📧 Auth Domain: ${auth.config.authDomain}`, 'info');
+                } else {
+                    addAutoTest('❌ Firebase non initialisé', 'error');
+                }
+            } catch (error) {
+                addAutoTest(`❌ Erreur Firebase: ${error.message}`, 'error');
+            }
+            
+            // Test 2: Providers configurés
+            try {
+                if (googleProvider) {
+                    addAutoTest('✅ Google Provider configuré', 'success');
+                }
+                if (githubProvider) {
+                    addAutoTest('✅ GitHub Provider configuré', 'success');
+                }
+            } catch (error) {
+                addAutoTest(`❌ Erreur Providers: ${error.message}`, 'error');
+            }
+            
+            // Test 3: Environnement
+            if (isGitHubPages()) {
+                addAutoTest('🚀 Environnement GitHub Pages détecté', 'info');
+                addAutoTest('⚠️ Vérifiez que votre domaine est autorisé dans Firebase', 'warning');
+            } else {
+                addAutoTest('🏠 Environnement local détecté', 'info');
+            }
+            
+            // Test 4: HTTPS
+            if (window.location.protocol === 'https:') {
+                addAutoTest('✅ HTTPS activé (requis pour OAuth)', 'success');
+            } else {
+                addAutoTest('⚠️ HTTP détecté - HTTPS recommandé pour production', 'warning');
+            }
+        }
+
+        // Tests manuels
+        window.testFirebaseConnection = function() {
+            try {
+                if (auth && auth.app) {
+                    addStatus('✅ Firebase connecté avec succès', 'success');
+                    addStatus(`📊 Project ID: ${auth.app.options.projectId}`, 'info');
+                    addStatus(`🌐 Auth Domain: ${auth.app.options.authDomain}`, 'info');
+                } else {
+                    addStatus('❌ Erreur: Firebase non connecté', 'error');
+                }
+            } catch (error) {
+                addStatus(`❌ Erreur Firebase: ${error.message}`, 'error');
+            }
+        };
+
+        window.testAuthService = function() {
+            try {
+                if (auth.currentUser) {
+                    addStatus('✅ Utilisateur déjà connecté', 'success');
+                } else {
+                    addStatus('ℹ️ Aucun utilisateur connecté (normal)', 'info');
+                }
+                addStatus('✅ Service d\'authentification opérationnel', 'success');
+            } catch (error) {
+                addStatus(`❌ Erreur service auth: ${error.message}`, 'error');
+            }
+        };
+
+        window.testGoogleAuth = function() {
+            addStatus('🔄 Test de l\'authentification Google...', 'info');
+            
+            if (isGitHubPages()) {
+                // Utiliser redirect sur GitHub Pages
+                signInWithRedirect(auth, googleProvider)
+                    .catch((error) => {
+                        addStatus(`❌ Erreur Google Auth (redirect): ${error.message}`, 'error');
+                    });
+            } else {
+                // Utiliser popup en local
+                signInWithPopup(auth, googleProvider)
+                    .then((result) => {
+                        addStatus('✅ Google Auth réussie!', 'success');
+                    })
+                    .catch((error) => {
+                        addStatus(`❌ Erreur Google Auth (popup): ${error.message}`, 'error');
+                    });
+            }
+        };
+
+        window.testEmailAuth = function() {
+            const testEmail = 'test@example.com';
+            const testPassword = 'test123456';
+            
+            addStatus('🔄 Test de création de compte email...', 'info');
+            
+            createUserWithEmailAndPassword(auth, testEmail, testPassword)
+                .then((userCredential) => {
+                    addStatus('✅ Création de compte email réussie!', 'success');
+                    // Supprimer le compte de test
+                    userCredential.user.delete();
+                })
+                .catch((error) => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        addStatus('✅ Email auth configuré (compte déjà existant)', 'success');
+                    } else {
+                        addStatus(`❌ Erreur Email Auth: ${error.message}`, 'error');
+                    }
+                });
+        };
+
+        window.logout = function() {
+            auth.signOut().then(() => {
+                addStatus('✅ Déconnexion réussie', 'success');
+            }).catch((error) => {
+                addStatus(`❌ Erreur déconnexion: ${error.message}`, 'error');
+            });
+        };
+
+        // Lancer les tests automatiques
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                runAutoTests();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
