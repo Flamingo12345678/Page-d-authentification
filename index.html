@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Modern Login Page | YEE</title>
+    <title>Page de connexion moderne | YEE</title>
 </head>
 
 <body>
@@ -16,32 +16,32 @@
             <form>
                 <h1>Create Account</h1>
                 <div class="social-icons">
-                    <a href="#" id="google-login" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                    <a href="#" id="facebook-login" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" id="github-login" class="icon"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" id="linkedin-login" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" id="google-signup" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" id="facebook-signup" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" id="github-signup" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" id="linkedin-signup" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
-                <span>or use your email for registeration</span>
-                <input type="text" placeholder="Name">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button>Sign Up</button>
+                <span>or use your email for registration</span>
+                <input type="text" placeholder="Name" id="signup-name" required>
+                <input type="email" placeholder="Email" id="signup-email" required>
+                <input type="password" placeholder="Password" id="signup-password" required>
+                <button type="submit">Sign Up</button>
             </form>
         </div>
         <div class="form-container sign-in">
             <form>
                 <h1>Sign In</h1>
                 <div class="social-icons">
-                    <a href="#" id="google-login" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                    <a href="#" id="facebook-login" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" id="github-login" class="icon"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" id="apple-login" class="icon"><i class="fa-brands fa-apple"></i></a>
+                    <a href="#" id="google-signin" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" id="facebook-signin" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" id="github-signin" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" id="apple-signin" class="icon"><i class="fa-brands fa-apple"></i></a>
                 </div>
-                <span>or use your email password</span>
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <a href="mdp-forgot.html">Forget Your Password?</a>
-                <button>Sign In</button>
+                <span>ou utilisez votre email et mot de passe</span>
+                <input type="email" placeholder="Email" id="signin-email" required>
+                <input type="password" placeholder="Password" id="signin-password" required>
+                <a href="mdp-forgot.html">Mot de passe oublié ?</a>
+                <button type="submit">Se connecter</button>
             </form>
         </div>
         <div class="toggle-container">

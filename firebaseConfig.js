@@ -4,6 +4,7 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider, GithubAuthProvider, FacebookAuthProvider, signInWithPopup, OAuthProvider } from "firebase/auth";
 
 // Your web app's Firebase configuration
+// Note: Ces clés sont publiques et doivent être configurées avec des règles de sécurité appropriées
 const firebaseConfig = {
     apiKey: "AIzaSyA6kE6xM2C0WMFz6j_7OcncBP9j_8ZtC84",
     authDomain: "ai-app-ad067.firebaseapp.com",
@@ -18,13 +19,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-auth.languageCode = 'it';
 
-// Auth providers
+// Configuration de la langue (français au lieu d'italien)
+auth.languageCode = 'fr';
+
+// Auth providers avec configurations améliorées
 const googleProvider = new GoogleAuthProvider();
+googleProvider.addScope('profile');
+googleProvider.addScope('email');
+
 const githubProvider = new GithubAuthProvider();
+githubProvider.addScope('user:email');
+
 const facebookProvider = new FacebookAuthProvider();
-const appleProvider = new OAuthProvider('apple.com'); // Only works if Apple sign-in is enabled in Firebase Console
+facebookProvider.addScope('email');
+
+// Apple provider - Fonctionne uniquement si Apple Sign-in est activé dans Firebase Console
+const appleProvider = new OAuthProvider('apple.com');
+appleProvider.addScope('email');
+appleProvider.addScope('name');
 
 // Export as needed
 export {

@@ -14,44 +14,90 @@ function handleLogin(provider) {
   signInWithPopup(auth, provider)
     .then((result) => {
       const user = result.user;
-      alert(`Bienvenue ${user.displayName}`);
+      alert(`Bienvenue ${user.displayName || user.email}`);
       console.log(user);
     })
     .catch((error) => {
       console.error("Erreur d'authentification :", error);
-      alert(error.message);
+      alert(`Erreur: ${error.message}`);
     });
 }
 
-// Événements sur les boutons
-document.getElementById("google-login").addEventListener("click", (e) => {
-  e.preventDefault();
-  handleLogin(googleProvider);
-});
+// Événements pour les boutons de connexion (sign-in)
+const googleSignin = document.getElementById("google-signin");
+const facebookSignin = document.getElementById("facebook-signin");
+const githubSignin = document.getElementById("github-signin");
+const appleSignin = document.getElementById("apple-signin");
 
-document.getElementById("facebook-login").addEventListener("click", (e) => {
-  e.preventDefault();
-  handleLogin(facebookProvider);
-});
+// Événements pour les boutons d'inscription (sign-up)
+const googleSignup = document.getElementById("google-signup");
+const facebookSignup = document.getElementById("facebook-signup");
+const githubSignup = document.getElementById("github-signup");
 
-document.getElementById("github-login").addEventListener("click", (e) => {
-  e.preventDefault();
-  handleLogin(githubProvider);
-});
+// Gestion des événements pour sign-in
+if (googleSignin) {
+  googleSignin.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleLogin(googleProvider);
+  });
+}
 
-document.getElementById("apple-login").addEventListener("click", (e) => {
-  e.preventDefault();
-  handleLogin(appleProvider);
-});
+if (facebookSignin) {
+  facebookSignin.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleLogin(facebookProvider);
+  });
+}
 
+if (githubSignin) {
+  githubSignin.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleLogin(githubProvider);
+  });
+}
+
+if (appleSignin) {
+  appleSignin.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleLogin(appleProvider);
+  });
+}
+
+// Gestion des événements pour sign-up
+if (googleSignup) {
+  googleSignup.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleLogin(googleProvider);
+  });
+}
+
+if (facebookSignup) {
+  facebookSignup.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleLogin(facebookProvider);
+  });
+}
+
+if (githubSignup) {
+  githubSignup.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleLogin(githubProvider);
+  });
+}
+
+// Gestion de l'animation des panneaux
 const container = document.getElementById('container');
 const registerBtn = document.getElementById('register');
 const loginBtn = document.getElementById('login');
 
-registerBtn.addEventListener('click', () => {
+if (registerBtn) {
+  registerBtn.addEventListener('click', () => {
     container.classList.add("active");
-});
+  });
+}
 
-loginBtn.addEventListener('click', () => {
+if (loginBtn) {
+  loginBtn.addEventListener('click', () => {
     container.classList.remove("active");
-});
+  });
+}

@@ -1,27 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Modern Login Page | YEE</title>
+    <title>Mot de passe oublié | YEE</title>
 </head>
 
 <body>
-    <div class="container" id="contain">
+    <div class="container" id="container">
         <div class="form-container forgot-password">
-            <form>
-                <h1>Forgot Password</h1>
-                <p class="subtitle">Enter your email address and we'll send you a link to reset your password.</p>
-                <input type="email" placeholder="Email" required>
-                <button type="submit">Send Reset Link</button>
-                <a href="index.html" class="back-to-login">Back to Login</a>
+            <form id="forgot-password-form">
+                <h1>Mot de passe oublié</h1>
+                <p class="subtitle">Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
+                <input type="email" id="reset-email" placeholder="Email" required>
+                <button type="submit">Envoyer le lien</button>
+                <a href="index.html" class="back-to-login">Retour à la connexion</a>
             </form>
         </div>
     </div>
-   
+    
+    <script type="module">
+        import { auth } from './firebaseConfig.js';
+        import { sendPasswordResetEmail } from "firebase/auth";
+
+        document.getElementById('forgot-password-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reset-email').value;
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert('Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.');
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert(`Erreur: ${error.message}`);
+            }
+        });
+    </script>
 </body>
 
 </html>
